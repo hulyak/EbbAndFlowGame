@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+
+/* Custom animations for Reddagotchi */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Pet status specific animations */
+.pet-happy {
+  animation: bounce 1s infinite;
+}
+
+.pet-sad {
+  animation: pulse 2s infinite;
+}
+
+.pet-sick {
+  animation: pulse 1.5s infinite;
+  filter: grayscale(0.3);
+}
+
+.pet-sleeping {
+  animation: pulse 3s infinite;
+}
+
+.pet-dead {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+/* Stat bar animations */
+.stat-bar {
+  transition: width 0.5s ease-in-out;
+}
+
+/* Button hover effects */
+.action-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.action-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
