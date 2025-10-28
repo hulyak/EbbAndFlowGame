@@ -1,72 +1,46 @@
-# 🍃 Ebb & Flow - Zen Leaf Collection Game 🍃
+# 🍃 Ebb & Flow
 
-A relaxing and engaging leaf collection game built for Reddit's Developer Platform using Devvit Web. Inspired by Lumosity-style brain training games, players collect flowing leaves in a peaceful, physics-based environment with touch and cursor controls.
+A fast-paced leaf collection game for Reddit. You've got 30 seconds to grab the golden leaves while dodging the regular ones. Miss too many and you're out. It's trickier than it sounds.
 
-## 🎮 Game Features
+## What's This About?
 
-### ✨ Polished Experience
-- **Stunning Splash Screen**: Beautiful animated intro with floating leaves
-- **Responsive Design**: Perfect on desktop, tablet, and mobile devices
-- **Smooth Animations**: 60fps physics with natural leaf movement
-- **Error Handling**: Graceful error recovery and user feedback
+The game is pretty straightforward - leaves fall down your screen, some are golden (the good ones), most aren't. You click the golden ones to score points, but click a regular leaf and you lose a life. Run out of lives or time, game over.
 
-### � **CoGmmunity Garden - Collaborative Features**
-- **Shared Goals**: Every leaf collected contributes to community objectives
-- **Seasonal Progression**: Unlock new seasons through collective effort
-- **Daily & Weekly Challenges**: Time-limited goals that bring players together
-- **Community Rewards**: Special animations, leaf types, and decorations
-- **Real-time Progress**: See community goals update as players contribute
-- **Personal Impact**: Track your individual contribution to shared success
+But here's where it gets interesting: everyone's playing together. Every leaf you collect helps the whole community unlock new stuff. We've got daily challenges, seasonal themes that change as people play, and leaderboards to see how you stack up.
 
-### 🎯 Zen Gameplay Mechanics
-- **Physics-Based Movement**: Leaves flow naturally with realistic physics
-- **Multi-Touch Support**: Intuitive interaction for all devices
-- **Target Collection**: Collect glowing, pulsing target leaves
-- **Progressive Difficulty**: Easy, Medium, and Hard modes with unique challenges
-- **Dual Purpose**: Personal scoring + community contribution system
+### The Basics
+- 30 seconds per game
+- 3 lives to work with
+- Golden leaves = 100 points (these are what you want)
+- Regular leaves = lose a life but get 10 points anyway
+- Three difficulty levels with more leaves and faster movement
 
-### 🎨 Visual & Audio Polish
-- **Gradient Backgrounds**: Beautiful emerald-to-teal color schemes
-- **Particle Effects**: Celebration animations and click feedback
-- **Haptic Feedback**: Vibration on mobile devices when catching leaves
-- **Audio Cues**: Pleasant sound effects for successful catches
-- **Visual Feedback**: Expanding rings and floating score popups
-- **Seasonal Themes**: Visual changes based on community garden progress
+### Community Stuff
+Your games aren't just about your score. Every leaf collected by anyone helps unlock:
+- New seasons (Spring → Summer → Autumn → Winter)
+- Special leaf types and animations
+- Daily and weekly community goals
+- Shared rewards for everyone
 
-### 📊 Engagement Systems
-- **Daily Games**: 10 games per day for balanced, sustainable play
-- **Smart Scoring**: Points for target leaves (100pts) and regular leaves (10pts)
-- **Leaderboards**: Community rankings and recent game activity
-- **Personal Stats**: Comprehensive progress tracking and achievements
-- **Community Impact**: See how your play helps achieve shared goals
+### Polish
+We spent time making this feel good to play:
+- Smooth 60fps movement
+- Nice gradients and particle effects
+- Works great on phones and computers
+- Haptic feedback when you catch leaves
+- Sound effects that don't get annoying
 
-## 🛠 Technical Implementation
+## Tech Stack
 
-Built with:
-- **Devvit Web**: Reddit's interactive post platform
-- **React 19**: Modern React with hooks for state management
-- **TypeScript**: Full type safety across client and server
-- **Tailwind CSS**: Responsive, beautiful UI design
-- **Redis**: Persistent data storage for puzzle state and user progress
-- **Express**: Server-side API handling
+Built with Reddit's Devvit platform using React, TypeScript, and Tailwind. Data gets stored in Redis so your progress sticks around.
 
-## 🎯 Hackathon Categories
+### Kiro Development
 
-This project targets:
-- **Community Play**: Massively multiplayer mechanics bringing Redditors together
-- **Best Kiro Developer Experience**: Leveraging Kiro for enhanced development workflow
+This project was built using Kiro as the main development tool. We set up custom hooks for automating repetitive tasks, steering rules for platform-specific guidance, and specs for organizing complex features. 
 
-### 🚀 Kiro Integration Showcase
+Check out [KIRO_DEVELOPER_EXPERIENCE.md](./KIRO_DEVELOPER_EXPERIENCE.md) if you want to see how we used Kiro to speed up development and avoid common mistakes.
 
-This project demonstrates sophisticated Kiro integration through:
-- **Intelligent Automation**: 6 custom hooks for asset management, performance optimization, and testing
-- **Context-Aware Guidance**: 8 steering rules providing platform-specific expertise
-- **Spec-Driven Development**: EARS-compliant requirements with full traceability
-- **Creative Solutions**: Anticipatory automation that transforms developer workflow
-
-**📖 See [KIRO_DEVELOPER_EXPERIENCE.md](./KIRO_DEVELOPER_EXPERIENCE.md) for detailed analysis of how Kiro transformed our development process.**
-
-## 🚀 Getting Started
+## Getting Started
 
 > Make sure you have Node 22 downloaded on your machine before running!
 
@@ -90,25 +64,16 @@ This project demonstrates sophisticated Kiro integration through:
    npm run deploy
    ```
 
-## 🎮 How to Play
+## How to Play
 
-### Individual Gameplay:
-1. **Launch**: Experience the beautiful splash screen and enter the zen garden
-2. **Check Community Goals**: See what the community is working toward together
-3. **Choose Difficulty**: Select Easy (5 leaves), Medium (8 leaves), or Hard (12 leaves)
-4. **Watch the Flow**: Leaves gently float and bounce with realistic physics
-5. **Spot Targets**: Look for glowing, pulsing leaves - these are your collection targets
-6. **Tap or Click**: Touch or click on target leaves to collect them (works on all devices)
-7. **Get Feedback**: Enjoy visual, audio, and haptic feedback when you catch leaves
-8. **Beat the Clock**: Collect all target leaves within 60 seconds to win!
+1. Pick your difficulty (Easy, Medium, or Hard)
+2. Watch leaves fall down the screen
+3. Click only the golden glowing ones - they're worth 100 points
+4. Avoid regular leaves or you'll lose a life (though you still get 10 points)
+5. You have 30 seconds and 3 lives
+6. Try not to panic when it gets chaotic
 
-### Community Collaboration:
-1. **Every Leaf Counts**: Each leaf you collect contributes to community goals
-2. **Daily Challenges**: Work together to collect 500 leaves per day
-3. **Weekly Goals**: Help achieve larger objectives like 2,500 leaves per week
-4. **Seasonal Progress**: Unlock new seasons (Spring → Summer → Autumn → Winter)
-5. **Shared Rewards**: Unlock special animations, leaf types, and decorations
-6. **Track Impact**: See your personal contribution to community success
+The community aspect happens automatically - every leaf you collect helps everyone unlock new stuff. No extra work required.
 
 ## 🏆 Game Mechanics
 
@@ -136,22 +101,11 @@ This project demonstrates sophisticated Kiro integration through:
 - **Time Bonus**: Extra points for completing levels quickly
 - **Difficulty Multiplier**: Higher difficulty = more points
 
-## 🤝 Community Aspects
+## Community Features
 
-- **Personal Journey**: Individual gameplay with community leaderboards
-- **Daily Challenges**: 10 games per day keeps engagement balanced
-- **Bite-sized Sessions**: Each game takes 60 seconds
-- **Persistent Progress**: Your stats and achievements are saved
-- **Social Recognition**: Leaderboard celebrates top collectors
-- **Relaxing Competition**: Zen gameplay with friendly competition
+Your individual games contribute to community goals automatically. Everyone works together to unlock seasonal themes and new content. There's a leaderboard if you're competitive, but the main focus is collective progress.
 
-## 🎨 Visual Design
-
-- **Calming Colors**: Peaceful blue-green gradients for relaxation
-- **Smooth Animation**: 60fps physics simulation for natural movement
-- **Glowing Effects**: Target leaves have subtle glow effects
-- **Touch-Friendly**: Large, easy-to-tap leaf targets
-- **Responsive Canvas**: Adapts to different screen sizes perfectly
+Daily limit of 20 games keeps things from getting too intense (999 during development for testing).
 
 ## Commands
 
