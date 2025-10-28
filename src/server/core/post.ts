@@ -18,11 +18,9 @@ export async function createPost() {
     title: `🍃 ${date}'s Ebb & Flow - Leaf Collection Game`,
     splash: {
       appDisplayName: 'Ebb & Flow',
-      // Use a working gradient background since PNG isn't loading
+      // Use default splash image
       backgroundUri: 'default-splash.png',
       buttonLabel: 'Start Playing',
-      description:
-        'Fast-paced 30-second leaf collection challenge! Collect golden leaves, avoid regular ones, and climb the leaderboard!',
       heading: 'Welcome to Ebb & Flow',
       appIconUri: 'default-icon.png',
     },
