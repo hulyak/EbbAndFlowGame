@@ -19,7 +19,7 @@ const formatTimeAgo = (timestamp: number) => {
   const diff = now - timestamp;
   const minutes = Math.floor(diff / (1000 * 60));
   const hours = Math.floor(diff / (1000 * 60 * 60));
-  
+
   if (minutes < 1) return 'just now';
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
@@ -35,16 +35,28 @@ const getRankEmoji = (rank: number) => {
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
-    case 'easy': return 'text-green-600';
-    case 'medium': return 'text-yellow-600';
-    case 'hard': return 'text-red-600';
-    default: return 'text-gray-600';
+    case 'easy':
+      return 'text-green-600';
+    case 'medium':
+      return 'text-yellow-600';
+    case 'hard':
+      return 'text-red-600';
+    default:
+      return 'text-gray-600';
   }
 };
 
-export const GameLeaderboard = ({ leaderboard, userStats, recentGames, communityGarden }: GameLeaderboardProps) => {
+export const GameLeaderboard = ({
+  leaderboard,
+  userStats,
+  recentGames,
+  communityGarden,
+}: GameLeaderboardProps) => {
   return (
-    <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 p-2 sm:p-4 overflow-y-auto" style={{ height: '100vh', width: '100vw' }}>
+    <div
+      className="bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 p-2 sm:p-4 overflow-y-auto"
+      style={{ height: '100vh', width: '100vw' }}
+    >
       {/* Floating background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {Array.from({ length: 10 }).map((_, i) => (
@@ -79,7 +91,7 @@ export const GameLeaderboard = ({ leaderboard, userStats, recentGames, community
 
         {/* Community Garden - Full Width */}
         <div className="mb-3 sm:mb-4 flex-shrink-0">
-          <CommunityGarden 
+          <CommunityGarden
             communityGarden={communityGarden}
             userContribution={userStats.communityContribution || 0}
           />
@@ -95,7 +107,9 @@ export const GameLeaderboard = ({ leaderboard, userStats, recentGames, community
             <div className="space-y-2 sm:space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 text-sm">Total Score</span>
-                <span className="font-bold text-blue-600 text-sm">{userStats.totalScore.toLocaleString()}</span>
+                <span className="font-bold text-blue-600 text-sm">
+                  {userStats.totalScore.toLocaleString()}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 text-sm">Highest Level</span>
@@ -108,12 +122,17 @@ export const GameLeaderboard = ({ leaderboard, userStats, recentGames, community
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 text-sm">Completion Rate</span>
                 <span className="font-bold text-orange-600 text-sm">
-                  {userStats.gamesPlayed > 0 ? Math.round((userStats.gamesCompleted / userStats.gamesPlayed) * 100) : 0}%
+                  {userStats.gamesPlayed > 0
+                    ? Math.round((userStats.gamesCompleted / userStats.gamesPlayed) * 100)
+                    : 0}
+                  %
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 text-sm">Leaves Collected</span>
-                <span className="font-bold text-yellow-600 text-sm">{userStats.totalLeavesCollected}</span>
+                <span className="font-bold text-yellow-600 text-sm">
+                  {userStats.totalLeavesCollected}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 text-sm">Current Streak</span>
@@ -121,7 +140,9 @@ export const GameLeaderboard = ({ leaderboard, userStats, recentGames, community
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 text-sm">Community Contribution</span>
-                <span className="font-bold text-emerald-600 text-sm">{userStats.communityContribution || 0} 🌱</span>
+                <span className="font-bold text-emerald-600 text-sm">
+                  {userStats.communityContribution || 0} 🌱
+                </span>
               </div>
             </div>
 
@@ -130,7 +151,10 @@ export const GameLeaderboard = ({ leaderboard, userStats, recentGames, community
                 <h3 className="font-semibold text-gray-800 mb-2 text-sm">🏅 Achievements</h3>
                 <div className="flex flex-wrap gap-1">
                   {userStats.achievements.map((achievement, index) => (
-                    <span key={index} className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                    <span
+                      key={index}
+                      className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full"
+                    >
                       {achievement}
                     </span>
                   ))}
@@ -148,10 +172,14 @@ export const GameLeaderboard = ({ leaderboard, userStats, recentGames, community
             {leaderboard.length > 0 ? (
               <div className="space-y-3">
                 {leaderboard.slice(0, 10).map((user) => (
-                  <div key={user.username} 
-                       className={`flex items-center justify-between p-3 rounded-lg ${
-                         user.username === userStats.username ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50'
-                       }`}>
+                  <div
+                    key={user.username}
+                    className={`flex items-center justify-between p-3 rounded-lg ${
+                      user.username === userStats.username
+                        ? 'bg-blue-50 border-2 border-blue-200'
+                        : 'bg-gray-50'
+                    }`}
+                  >
                     <div className="flex items-center space-x-3">
                       <span className="text-lg">{getRankEmoji(user.rank)}</span>
                       <div>
@@ -162,7 +190,9 @@ export const GameLeaderboard = ({ leaderboard, userStats, recentGames, community
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-semibold text-blue-600">{user.totalScore.toLocaleString()}</div>
+                      <div className="font-semibold text-blue-600">
+                        {user.totalScore.toLocaleString()}
+                      </div>
                       <div className="text-xs text-gray-500">points</div>
                     </div>
                   </div>
@@ -182,14 +212,16 @@ export const GameLeaderboard = ({ leaderboard, userStats, recentGames, community
             {recentGames.length > 0 ? (
               <div className="space-y-3">
                 {recentGames.slice(0, 8).map((game, index) => (
-                  <div key={`${game.username}-${game.timestamp}-${index}`} 
-                       className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div
+                    key={`${game.username}-${game.timestamp}-${index}`}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                  >
                     <div className="flex items-center space-x-2">
                       <span className="text-lg">🍃</span>
                       <div>
                         <span className="font-medium text-gray-800">{game.username}</span>
                         <div className="text-xs text-gray-600">
-                          Level {game.level} • 
+                          Level {game.level} •
                           <span className={`ml-1 ${getDifficultyColor(game.difficulty)}`}>
                             {game.difficulty}
                           </span>
@@ -198,9 +230,7 @@ export const GameLeaderboard = ({ leaderboard, userStats, recentGames, community
                     </div>
                     <div className="text-right">
                       <div className="text-sm font-semibold text-green-600">{game.score}</div>
-                      <div className="text-xs text-gray-500">
-                        {formatTimeAgo(game.timestamp)}
-                      </div>
+                      <div className="text-xs text-gray-500">{formatTimeAgo(game.timestamp)}</div>
                     </div>
                   </div>
                 ))}

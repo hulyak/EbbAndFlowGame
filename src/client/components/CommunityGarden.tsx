@@ -8,51 +8,63 @@ interface CommunityGardenProps {
 
 const getSeasonEmoji = (season: string) => {
   switch (season) {
-    case 'spring': return '🌸';
-    case 'summer': return '☀️';
-    case 'autumn': return '🍂';
-    case 'winter': return '❄️';
-    default: return '🌱';
+    case 'spring':
+      return '🌸';
+    case 'summer':
+      return '☀️';
+    case 'autumn':
+      return '🍂';
+    case 'winter':
+      return '❄️';
+    default:
+      return '🌱';
   }
 };
 
 const getSeasonColor = (season: string) => {
   switch (season) {
-    case 'spring': return 'from-pink-400 to-green-400';
-    case 'summer': return 'from-yellow-400 to-orange-400';
-    case 'autumn': return 'from-orange-400 to-red-400';
-    case 'winter': return 'from-blue-400 to-cyan-400';
-    default: return 'from-green-400 to-teal-400';
+    case 'spring':
+      return 'from-pink-400 to-green-400';
+    case 'summer':
+      return 'from-yellow-400 to-orange-400';
+    case 'autumn':
+      return 'from-orange-400 to-red-400';
+    case 'winter':
+      return 'from-blue-400 to-cyan-400';
+    default:
+      return 'from-green-400 to-teal-400';
   }
 };
 
 const formatTimeRemaining = (endTime: number) => {
   const now = Date.now();
   const remaining = endTime - now;
-  
+
   if (remaining <= 0) return 'Expired';
-  
+
   const hours = Math.floor(remaining / (1000 * 60 * 60));
   const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-  
+
   if (hours > 24) {
     const days = Math.floor(hours / 24);
     return `${days}d ${hours % 24}h`;
   }
-  
+
   return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
 };
 
 const GoalCard: React.FC<{ goal: CommunityGoal }> = ({ goal }) => {
   const progress = Math.min(100, (goal.currentLeaves / goal.targetLeaves) * 100);
   const isCompleted = goal.status === 'completed';
-  
+
   return (
-    <div className={`p-4 rounded-xl border-2 transition-all ${
-      isCompleted 
-        ? 'bg-green-50 border-green-200' 
-        : 'bg-white border-gray-200 hover:border-emerald-300'
-    }`}>
+    <div
+      className={`p-4 rounded-xl border-2 transition-all ${
+        isCompleted
+          ? 'bg-green-50 border-green-200'
+          : 'bg-white border-gray-200 hover:border-emerald-300'
+      }`}
+    >
       <div className="flex items-start justify-between mb-3">
         <div>
           <h4 className="font-semibold text-gray-800 flex items-center">
@@ -65,12 +77,10 @@ const GoalCard: React.FC<{ goal: CommunityGoal }> = ({ goal }) => {
           <div className="text-sm font-medium text-gray-700">
             {goal.currentLeaves.toLocaleString()} / {goal.targetLeaves.toLocaleString()}
           </div>
-          <div className="text-xs text-gray-500">
-            {formatTimeRemaining(goal.endTime)}
-          </div>
+          <div className="text-xs text-gray-500">{formatTimeRemaining(goal.endTime)}</div>
         </div>
       </div>
-      
+
       <div className="mb-3">
         <div className="flex justify-between text-sm mb-1">
           <span className="text-gray-600">Progress</span>
@@ -85,7 +95,7 @@ const GoalCard: React.FC<{ goal: CommunityGoal }> = ({ goal }) => {
           />
         </div>
       </div>
-      
+
       <div className="flex items-center justify-between text-sm">
         <span className="text-gray-600">Reward: {goal.reward}</span>
         <span className="text-emerald-600 font-medium">{goal.participants} players</span>
@@ -94,9 +104,9 @@ const GoalCard: React.FC<{ goal: CommunityGoal }> = ({ goal }) => {
   );
 };
 
-export const CommunityGarden: React.FC<CommunityGardenProps> = ({ 
-  communityGarden, 
-  userContribution 
+export const CommunityGarden: React.FC<CommunityGardenProps> = ({
+  communityGarden,
+  userContribution,
 }) => {
   const seasonEmoji = getSeasonEmoji(communityGarden.currentSeason);
   const seasonColor = getSeasonColor(communityGarden.currentSeason);
@@ -116,7 +126,7 @@ export const CommunityGarden: React.FC<CommunityGardenProps> = ({
             </p>
           </div>
         </div>
-        
+
         {/* Season Progress */}
         <div className="mb-4">
           <div className="flex justify-between text-sm mb-2">
@@ -130,7 +140,9 @@ export const CommunityGarden: React.FC<CommunityGardenProps> = ({
             />
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            {communityGarden.nextSeasonUnlock - (communityGarden.totalLeavesCollected % communityGarden.nextSeasonUnlock)} leaves to next season
+            {communityGarden.nextSeasonUnlock -
+              (communityGarden.totalLeavesCollected % communityGarden.nextSeasonUnlock)}{' '}
+            leaves to next season
           </p>
         </div>
       </div>
@@ -144,9 +156,7 @@ export const CommunityGarden: React.FC<CommunityGardenProps> = ({
           <div className="text-xs text-gray-600">Total Leaves</div>
         </div>
         <div className="text-center p-3 bg-teal-50 rounded-xl">
-          <div className="text-2xl font-bold text-teal-600">
-            {communityGarden.completedGoals}
-          </div>
+          <div className="text-2xl font-bold text-teal-600">{communityGarden.completedGoals}</div>
           <div className="text-xs text-gray-600">Goals Completed</div>
         </div>
       </div>
@@ -187,7 +197,9 @@ export const CommunityGarden: React.FC<CommunityGardenProps> = ({
           </h3>
           <div className="space-y-2">
             {communityGarden.specialEvents.map((event, index) => (
-              <p key={index} className="text-sm text-yellow-700">{event}</p>
+              <p key={index} className="text-sm text-yellow-700">
+                {event}
+              </p>
             ))}
           </div>
         </div>

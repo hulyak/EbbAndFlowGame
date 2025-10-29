@@ -7,9 +7,11 @@ inclusion: manual
 ## Reddit Developer Platform Hackathon Success Patterns
 
 ### Community Play Category Excellence
+
 To excel in the Community Play category, focus on:
 
 1. **Massively Multiplayer Mechanics**
+
    - Implement shared goals that require community coordination
    - Create real-time progress indicators for community achievements
    - Design features that are more fun with more participants
@@ -26,6 +28,7 @@ To excel in the Community Play category, focus on:
 To demonstrate exceptional Kiro integration:
 
 1. **Sophisticated Automation**
+
    - Create hooks that anticipate developer needs
    - Implement context-aware guidance systems
    - Demonstrate progressive enhancement of development workflow
@@ -40,6 +43,7 @@ To demonstrate exceptional Kiro integration:
 ### Technical Excellence Indicators
 
 **Code Quality Metrics:**
+
 - TypeScript strict mode compliance
 - Comprehensive error handling
 - Mobile-responsive design
@@ -47,12 +51,14 @@ To demonstrate exceptional Kiro integration:
 - Accessibility compliance (WCAG 2.1 AA)
 
 **Platform Integration:**
+
 - Proper Devvit lifecycle management
 - Efficient Redis usage patterns
 - Optimized client-server communication
 - Graceful degradation for network issues
 
 **Innovation Markers:**
+
 - Novel use of Reddit platform features
 - Creative community engagement mechanics
 - Unique gameplay elements that leverage the platform
@@ -61,12 +67,14 @@ To demonstrate exceptional Kiro integration:
 ### Presentation and Documentation
 
 **For Judges:**
+
 - Clear demonstration of community impact
 - Quantifiable metrics (engagement, performance, etc.)
 - Evidence of sophisticated technical implementation
 - Compelling user experience that showcases platform capabilities
 
 **Technical Artifacts:**
+
 - Comprehensive .kiro directory structure
 - Well-documented specs with EARS-compliant requirements
 - Intelligent hooks that demonstrate automation sophistication
@@ -75,12 +83,14 @@ To demonstrate exceptional Kiro integration:
 ### Competitive Differentiation
 
 **What Sets Projects Apart:**
+
 - Deep understanding of Reddit's community dynamics
 - Technical innovation that enhances developer experience
 - Measurable impact on user engagement and satisfaction
 - Scalable solutions that could benefit the broader ecosystem
 
 **Avoid Common Pitfalls:**
+
 - Generic games that don't leverage Reddit's unique features
 - Basic Kiro usage without creative integration
 - Poor mobile experience or performance issues
@@ -89,18 +99,21 @@ To demonstrate exceptional Kiro integration:
 ### Success Metrics to Highlight
 
 **Community Engagement:**
+
 - Daily active users and retention rates
 - Community goal completion rates
 - Social sharing and discussion generation
 - Cross-subreddit adoption potential
 
 **Developer Experience:**
+
 - Development velocity improvements
 - Code quality metrics and bug reduction
 - Automation coverage and time savings
 - Reusability of patterns and solutions
 
 **Technical Achievement:**
+
 - Performance benchmarks (frame rate, load times)
 - Scalability demonstrations
 - Platform integration depth

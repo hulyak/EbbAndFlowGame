@@ -1,5 +1,15 @@
 import { redis } from '@devvit/web/server';
-import type { GameSession, Leaf, UserStats, GameDifficulty, LeafType, LeafColor, GameResult, CommunityGarden, CommunityGoal } from '../../shared/types/api';
+import type {
+  GameSession,
+  Leaf,
+  UserStats,
+  GameDifficulty,
+  LeafType,
+  LeafColor,
+  GameResult,
+  CommunityGarden,
+  CommunityGoal,
+} from '../../shared/types/api';
 
 const GAME_SESSION_KEY = 'ebb-flow:session';
 const USER_STATS_KEY = 'ebb-flow:user';
@@ -7,7 +17,7 @@ const DAILY_GAMES_KEY = 'ebb-flow:daily';
 const COMMUNITY_GARDEN_KEY = 'ebb-flow:community-garden';
 
 // Game configuration
-const DAILY_GAME_LIMIT = 999; // Development limit: unlimited games for testing
+const DAILY_GAME_LIMIT = 20; // Production limit: 20 games per day
 const GAME_DURATION = 30; // 30 seconds per game
 
 const DIFFICULTY_CONFIG = {
@@ -38,7 +48,7 @@ export class EbbFlowManager {
   // Community Garden Management
   private static async getCommunityGarden(): Promise<CommunityGarden> {
     const gardenData = await redis.get(COMMUNITY_GARDEN_KEY);
-    
+
     if (!gardenData) {
       const newGarden: CommunityGarden = {
         totalLeavesCollected: 0,
@@ -53,7 +63,7 @@ export class EbbFlowManager {
       await redis.set(COMMUNITY_GARDEN_KEY, JSON.stringify(newGarden));
       return newGarden;
     }
-    
+
     return JSON.parse(gardenData);
   }
 
@@ -90,7 +100,7 @@ export class EbbFlowManager {
         currentLeaves: 0,
         reward: 'Unlock new leaf types and seasonal decorations',
         startTime: now - (now % (7 * 24 * 60 * 60 * 1000)),
-        endTime: now - (now % (7 * 24 * 60 * 60 * 1000)) + (7 * 24 * 60 * 60 * 1000),
+        endTime: now - (now % (7 * 24 * 60 * 60 * 1000)) + 7 * 24 * 60 * 60 * 1000,
         status: 'active',
         participants: 0,
         type: 'weekly',
@@ -98,11 +108,16 @@ export class EbbFlowManager {
     ];
   }
 
-  private static async updateCommunityGoals(leavesContributed: number, _username: string): Promise<Array<{
-    goalId: string;
-    progress: number;
-    completed: boolean;
-  }>> {
+  private static async updateCommunityGoals(
+    leavesContributed: number,
+    _username: string
+  ): Promise<
+    Array<{
+      goalId: string;
+      progress: number;
+      completed: boolean;
+    }>
+  > {
     const garden = await this.getCommunityGarden();
     const goalProgress: Array<{ goalId: string; progress: number; completed: boolean }> = [];
 
@@ -113,7 +128,7 @@ export class EbbFlowManager {
     for (const goal of garden.activeGoals) {
       if (goal.status === 'active' && Date.now() <= goal.endTime) {
         goal.currentLeaves += leavesContributed;
-        
+
         // Check if goal is completed
         if (goal.currentLeaves >= goal.targetLeaves && goal.status === 'active') {
           goal.status = 'completed';
@@ -142,20 +157,33 @@ export class EbbFlowManager {
       garden.gardenLevel++;
       garden.seasonProgress = 0;
       // Cycle through seasons
-      const seasons: Array<'spring' | 'summer' | 'autumn' | 'winter'> = ['spring', 'summer', 'autumn', 'winter'];
+      const seasons: Array<'spring' | 'summer' | 'autumn' | 'winter'> = [
+        'spring',
+        'summer',
+        'autumn',
+        'winter',
+      ];
       const currentIndex = seasons.indexOf(garden.currentSeason);
-      garden.currentSeason = seasons[(currentIndex + 1) % seasons.length] as 'spring' | 'summer' | 'autumn' | 'winter';
+      garden.currentSeason = seasons[(currentIndex + 1) % seasons.length] as
+        | 'spring'
+        | 'summer'
+        | 'autumn'
+        | 'winter';
     }
 
     await this.saveCommunityGarden(garden);
     return goalProgress;
   }
 
-  private static generateLeaf(id: string, isTarget: boolean = false, speedMultiplier: number = 1.0): Leaf {
+  private static generateLeaf(
+    id: string,
+    isTarget: boolean = false,
+    speedMultiplier: number = 1.0
+  ): Leaf {
     // Generate leaves with better spread and varied movement
     const angle = Math.random() * Math.PI * 2; // Random direction
     const speed = (0.1 + Math.random() * 0.3) * speedMultiplier; // Much slower varied speed
-    
+
     return {
       id,
       type: LEAF_TYPES[Math.floor(Math.random() * LEAF_TYPES.length)] as LeafType,
@@ -235,7 +263,9 @@ export class EbbFlowManager {
     return count;
   }
 
-  public static async canUserPlay(username: string): Promise<{ canPlay: boolean; remaining: number }> {
+  public static async canUserPlay(
+    username: string
+  ): Promise<{ canPlay: boolean; remaining: number }> {
     const used = await this.getDailyGamesPlayed(username);
     const remaining = Math.max(0, DAILY_GAME_LIMIT - used);
     return {
@@ -244,11 +274,16 @@ export class EbbFlowManager {
     };
   }
 
-  public static async startGame(username: string, difficulty: GameDifficulty): Promise<GameSession> {
+  public static async startGame(
+    username: string,
+    difficulty: GameDifficulty
+  ): Promise<GameSession> {
     // Check if user can play
     const { canPlay } = await this.canUserPlay(username);
     if (!canPlay) {
-      throw new Error("You've used all your daily games! Come back tomorrow for more leaf collecting! 🍃");
+      throw new Error(
+        "You've used all your daily games! Come back tomorrow for more leaf collecting! 🍃"
+      );
     }
 
     const config = DIFFICULTY_CONFIG[difficulty];
@@ -293,7 +328,10 @@ export class EbbFlowManager {
     return gameSession;
   }
 
-  public static async collectLeaf(username: string, leafId: string): Promise<{ result: GameResult; updatedSession: GameSession; updatedUserStats: UserStats }> {
+  public static async collectLeaf(
+    username: string,
+    leafId: string
+  ): Promise<{ result: GameResult; updatedSession: GameSession; updatedUserStats: UserStats }> {
     const session = await this.getGameSession(username);
     if (!session) {
       throw new Error('No active game session found');
@@ -317,7 +355,7 @@ export class EbbFlowManager {
       };
     }
 
-    const leaf = session.leaves.find(l => l.id === leafId);
+    const leaf = session.leaves.find((l) => l.id === leafId);
     if (!leaf) {
       throw new Error('Leaf not found');
     }
@@ -328,7 +366,7 @@ export class EbbFlowManager {
 
     // Collect the leaf
     leaf.isCollected = true;
-    
+
     if (leaf.isTarget) {
       // Target leaf - award points and count towards completion
       session.score += leaf.points;
@@ -342,7 +380,7 @@ export class EbbFlowManager {
     // Check if game is over
     const levelCompleted = session.collectedLeaves >= session.targetLeaves;
     const gameOver = session.lives <= 0;
-    
+
     if (gameOver) {
       session.status = 'failed';
       session.endTime = Date.now();
@@ -351,7 +389,9 @@ export class EbbFlowManager {
       session.endTime = Date.now();
 
       // Time bonus
-      const timeBonus = Math.floor(session.timeRemaining * DIFFICULTY_CONFIG[session.difficulty].timeBonus);
+      const timeBonus = Math.floor(
+        session.timeRemaining * DIFFICULTY_CONFIG[session.difficulty].timeBonus
+      );
       session.score += timeBonus;
     }
 
@@ -365,7 +405,8 @@ export class EbbFlowManager {
     const userStats = await this.getUserStats(username);
     userStats.totalScore += leaf.points;
     userStats.totalLeavesCollected++;
-    userStats.communityContribution = (userStats.communityContribution || 0) + communityContribution;
+    userStats.communityContribution =
+      (userStats.communityContribution || 0) + communityContribution;
 
     if (levelCompleted) {
       userStats.gamesCompleted++;
@@ -404,7 +445,7 @@ export class EbbFlowManager {
     }
 
     // Add community goal progress messages
-    const completedGoals = goalProgress.filter(g => g.completed);
+    const completedGoals = goalProgress.filter((g) => g.completed);
     if (completedGoals.length > 0) {
       message += ` 🎉 Community goal completed!`;
     } else if (goalProgress.length > 0) {
@@ -435,13 +476,15 @@ export class EbbFlowManager {
     return [];
   }
 
-  public static async getRecentGames(): Promise<Array<{
-    username: string;
-    level: number;
-    score: number;
-    timestamp: number;
-    difficulty: GameDifficulty;
-  }>> {
+  public static async getRecentGames(): Promise<
+    Array<{
+      username: string;
+      level: number;
+      score: number;
+      timestamp: number;
+      difficulty: GameDifficulty;
+    }>
+  > {
     // In a real implementation, you'd store recent games in Redis
     // For now, we'll return an empty array
     return [];

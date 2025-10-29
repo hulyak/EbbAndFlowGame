@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { 
-  InitResponse, 
-  StartGameResponse, 
+import type {
+  InitResponse,
+  StartGameResponse,
   CollectLeafResponse,
   LeaderboardResponse,
-  GameSession, 
-  UserStats, 
+  GameSession,
+  UserStats,
   GameDifficulty,
-  CommunityGarden
+  CommunityGarden,
 } from '../../shared/types/api';
 
 interface EbbFlowState {
@@ -52,22 +52,22 @@ export const useEbbFlow = () => {
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-        
+
         const res = await fetch('/api/init', {
           signal: controller.signal,
         });
-        
+
         clearTimeout(timeoutId);
-        
+
         if (!res.ok) {
           throw new Error(`Server responded with ${res.status}: ${res.statusText}`);
         }
-        
+
         const data: InitResponse = await res.json();
         if (data.type !== 'init') {
           throw new Error('Invalid response format from server');
         }
-        
+
         setState({
           gameSession: null,
           userStats: data.userStats,
@@ -84,10 +84,10 @@ export const useEbbFlow = () => {
         setPostId(data.postId);
       } catch (err) {
         console.error('Failed to init ebb flow game', err);
-        setState((prev) => ({ 
-          ...prev, 
+        setState((prev) => ({
+          ...prev,
           loading: false,
-          lastMessage: err instanceof Error ? err.message : 'Failed to connect to game server'
+          lastMessage: err instanceof Error ? err.message : 'Failed to connect to game server',
         }));
       }
     };
@@ -104,7 +104,7 @@ export const useEbbFlow = () => {
         if (!res.ok) return;
         const data: LeaderboardResponse = await res.json();
         if (data.type !== 'leaderboard') return;
-        
+
         setState((prev) => ({
           ...prev,
           leaderboard: data.leaderboard,
@@ -129,11 +129,11 @@ export const useEbbFlow = () => {
         if (!prev.gameSession || prev.gameSession.status !== 'playing') return prev;
 
         const updatedSession = { ...prev.gameSession };
-        
+
         // Calculate time remaining based on start time and game duration (30 seconds)
         const elapsedTime = Math.floor((Date.now() - updatedSession.startTime) / 1000);
         updatedSession.timeRemaining = Math.max(0, 30 - elapsedTime);
-        
+
         // Check game completion or failure conditions
         if (updatedSession.collectedLeaves >= updatedSession.targetLeaves) {
           updatedSession.status = 'completed';
@@ -159,8 +159,15 @@ export const useEbbFlow = () => {
 
   const startGame = useCallback(
     async (difficulty: GameDifficulty) => {
-      console.log('Starting game with difficulty:', difficulty, 'postId:', postId, 'gameLoading:', state.gameLoading);
-      
+      console.log(
+        'Starting game with difficulty:',
+        difficulty,
+        'postId:',
+        postId,
+        'gameLoading:',
+        state.gameLoading
+      );
+
       if (!postId || state.gameLoading) {
         console.log('Cannot start game - missing postId or already loading');
         return;
@@ -175,17 +182,17 @@ export const useEbbFlow = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ difficulty }),
         });
-        
+
         console.log('Start game response status:', res.status);
-        
+
         if (!res.ok) {
           const errorData = await res.json();
           throw new Error(errorData.message || `HTTP ${res.status}`);
         }
-        
+
         const data: StartGameResponse = await res.json();
         console.log('Game started successfully:', data);
-        
+
         setState((prev) => ({
           ...prev,
           gameSession: data.gameSession,
@@ -195,10 +202,10 @@ export const useEbbFlow = () => {
         }));
       } catch (err) {
         console.error(`Failed to start game with difficulty: ${difficulty}`, err);
-        setState((prev) => ({ 
-          ...prev, 
+        setState((prev) => ({
+          ...prev,
           gameLoading: false,
-          lastMessage: err instanceof Error ? err.message : 'Failed to start game'
+          lastMessage: err instanceof Error ? err.message : 'Failed to start game',
         }));
       }
     },
@@ -220,23 +227,23 @@ export const useEbbFlow = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ leafId }),
         });
-        
+
         console.log(`collectLeaf: API response status ${res.status}`);
-        
+
         if (!res.ok) {
           const errorData = await res.json();
           throw new Error(errorData.message || `HTTP ${res.status}`);
         }
-        
+
         const data: CollectLeafResponse = await res.json();
         console.log('collectLeaf: Success', data.result.message);
-        
+
         setState((prev) => ({
           ...prev,
           gameSession: {
             ...data.updatedSession,
             // Calculate accurate time remaining based on start time
-            timeRemaining: prev.gameSession?.startTime 
+            timeRemaining: prev.gameSession?.startTime
               ? Math.max(0, 30 - Math.floor((Date.now() - prev.gameSession.startTime) / 1000))
               : data.updatedSession.timeRemaining,
           },
@@ -252,9 +259,9 @@ export const useEbbFlow = () => {
         }, 3000);
       } catch (err) {
         console.error(`Failed to collect leaf ${leafId}`, err);
-        setState((prev) => ({ 
-          ...prev, 
-          lastMessage: err instanceof Error ? err.message : 'Failed to collect leaf'
+        setState((prev) => ({
+          ...prev,
+          lastMessage: err instanceof Error ? err.message : 'Failed to collect leaf',
         }));
       }
     },

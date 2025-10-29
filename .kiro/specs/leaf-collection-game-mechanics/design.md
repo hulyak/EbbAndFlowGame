@@ -7,6 +7,7 @@ The Leaf Collection Game Mechanics system provides a zen-inspired 2D gaming expe
 ## Architecture
 
 ### Core Components Architecture
+
 ```
 Game Engine
 ├── Physics System
@@ -28,6 +29,7 @@ Game Engine
 ```
 
 ### Data Flow
+
 ```
 User Input → Input Handler → Game State Manager → Physics System → Rendering Engine → Canvas Display
      ↓
@@ -37,16 +39,20 @@ Feedback Systems (Haptic, Audio, Visual)
 ## Components and Interfaces
 
 ### 1. Game Engine Core
+
 **Purpose:** Central orchestrator managing game lifecycle and component coordination
 **Key Methods:**
+
 - `startGame(difficulty: GameDifficulty): GameSession`
 - `collectLeaf(leafId: string): GameResult`
 - `updatePhysics(deltaTime: number): void`
 - `render(): void`
 
 ### 2. Physics System
+
 **Purpose:** Handles realistic leaf movement and collision detection
 **Configuration:**
+
 ```typescript
 interface PhysicsConfig {
   speedMultiplier: number;
@@ -57,8 +63,10 @@ interface PhysicsConfig {
 ```
 
 ### 3. Leaf Entity System
+
 **Purpose:** Manages individual leaf properties and behaviors
 **Leaf Properties:**
+
 ```typescript
 interface Leaf {
   id: string;
@@ -78,8 +86,10 @@ interface Leaf {
 ```
 
 ### 4. Input Processing System
+
 **Purpose:** Unified handling of touch and mouse interactions
 **Event Processing:**
+
 ```typescript
 interface InputEvent {
   x: number; // canvas-relative x coordinate
@@ -90,8 +100,10 @@ interface InputEvent {
 ```
 
 ### 5. Visual Effects System
+
 **Purpose:** Manages animations, feedback, and visual enhancements
 **Effect Types:**
+
 - Click feedback (expanding circles)
 - Score popups (floating numbers)
 - Leaf glow effects (target leaves)
@@ -100,6 +112,7 @@ interface InputEvent {
 ## Data Models
 
 ### Game Session Model
+
 ```typescript
 interface GameSession {
   id: string;
@@ -119,6 +132,7 @@ interface GameSession {
 ```
 
 ### Difficulty Configuration
+
 ```typescript
 interface DifficultyConfig {
   easy: {
@@ -143,6 +157,7 @@ interface DifficultyConfig {
 ```
 
 ### Visual Feedback Models
+
 ```typescript
 interface ClickFeedback {
   id: string;
@@ -164,17 +179,20 @@ interface ScorePopup {
 ## Error Handling
 
 ### Input Validation
+
 - Validate canvas coordinates are within bounds
 - Ensure leaf IDs exist before collection attempts
 - Verify game session is active before processing interactions
 
 ### Performance Safeguards
+
 - Limit animation frame rate to 60fps
 - Implement object pooling for frequently created/destroyed objects
 - Use requestAnimationFrame for smooth animations
 - Cleanup event listeners and timers on component unmount
 
 ### Cross-Platform Compatibility
+
 - Fallback for Web Audio API failures
 - Graceful degradation when haptic feedback is unavailable
 - Touch event normalization across different devices
@@ -182,18 +200,21 @@ interface ScorePopup {
 ## Testing Strategy
 
 ### Unit Testing Focus
+
 - Physics calculations (movement, collision detection)
 - Scoring logic (point calculation, time bonuses)
 - Input coordinate transformation
 - Leaf generation algorithms
 
 ### Integration Testing
+
 - Canvas rendering performance
 - Touch/mouse event handling
 - Animation smoothness
 - Memory usage during extended play
 
 ### Performance Testing
+
 - 60fps maintenance across devices
 - Memory leak detection
 - Battery usage optimization
@@ -202,18 +223,21 @@ interface ScorePopup {
 ## Implementation Considerations
 
 ### Canvas Optimization
+
 - Use efficient drawing operations
 - Implement viewport culling for off-screen objects
 - Minimize canvas state changes
 - Batch similar drawing operations
 
 ### Mobile Performance
+
 - Optimize touch event handling
 - Implement efficient collision detection
 - Use CSS transforms for hardware acceleration
 - Consider device pixel ratio for crisp rendering
 
 ### Accessibility
+
 - Ensure adequate color contrast for leaf visibility
 - Provide alternative input methods
 - Support screen readers with appropriate ARIA labels

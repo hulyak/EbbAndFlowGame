@@ -5,6 +5,7 @@
 I built this leaf collection game using Kiro as my main development tool. Instead of just using it for basic coding help, I set up a whole system of automation and guidance that made development way smoother.
 
 Here's what worked really well:
+
 - Features got built about 60% faster using Kiro's spec system
 - Automated splash screen updates whenever I changed game assets
 - Context-aware help that actually understood Reddit's platform quirks
@@ -21,7 +22,7 @@ I organized everything in a `.kiro/` folder with three main parts:
 ```
 .kiro/
 ├── specs/           # Feature planning and requirements
-├── hooks/           # Automated tasks and helpers  
+├── hooks/           # Automated tasks and helpers
 ├── steering/        # Platform knowledge and context
 └── settings/        # Configuration
 ```
@@ -36,13 +37,13 @@ Reddit games need splash screens, and I kept forgetting to update mine when I ch
 
 ```json
 {
-  "name": "Splash Screen Generator", 
+  "name": "Splash Screen Generator",
   "when": {
     "type": "fileEdited",
     "patterns": ["assets/*", "src/client/public/*"]
   },
   "then": {
-    "type": "askAgent", 
+    "type": "askAgent",
     "prompt": "Assets changed, update the splash screen..."
   }
 }
@@ -58,7 +59,7 @@ I started with a Three.js Earth template but needed to turn it into a 2D leaf ga
 {
   "name": "Template Cleanup Assistant",
   "when": {
-    "type": "fileEdited", 
+    "type": "fileEdited",
     "patterns": ["src/client/main.ts", "src/server/core/ebbflow.ts"]
   },
   "then": {
@@ -75,8 +76,9 @@ This helped me transition smoothly from template to custom game without breaking
 Reddit's Devvit platform has its own quirks and limitations that are different from regular web development. Instead of constantly looking up documentation, I created steering files that give Kiro this knowledge automatically.
 
 My `devvit-platform-guide.md` includes:
+
 - Reddit API patterns and limits
-- Devvit build process specifics  
+- Devvit build process specifics
 - Common mistakes to avoid
 - Performance tips for the platform
 
@@ -87,6 +89,7 @@ Now when I ask Kiro for help, it already knows about Devvit's constraints and su
 Complex features like the community garden needed proper planning. I used Kiro's spec system to break everything down into clear requirements and tasks.
 
 For example, the community garden spec includes:
+
 - User stories explaining what players want
 - Acceptance criteria that define "done"
 - Technical design showing how it works
@@ -96,8 +99,9 @@ For example, the community garden spec includes:
 **User Story:** As a player, I want to see community progress, so that I feel part of a larger effort.
 
 **Acceptance Criteria:**
+
 - Display total leaves collected by everyone
-- Show progress toward community goals  
+- Show progress toward community goals
 - Update visual themes when seasons unlock
 ```
 
@@ -129,7 +133,7 @@ The key to good hooks is being specific about when they trigger and what they sh
 {
   "name": "Clear, descriptive name",
   "when": {
-    "type": "fileEdited", 
+    "type": "fileEdited",
     "patterns": ["specific/files/to/watch"]
   },
   "then": {
@@ -150,15 +154,18 @@ I organized my steering rules in layers:
 3. **Project-specific** - Details about this particular game
 
 Example from my tech stack steering:
+
 ```markdown
 # Technology Stack
 
 ## Core Technologies
+
 - **Devvit**: Reddit's developer platform
 - **React**: Frontend with hooks
 - **TypeScript**: Strict typing everywhere
 
-## Development Workflow  
+## Development Workflow
+
 - `npm run dev` for live development
 - Client builds to `dist/client`
 - Server builds to `dist/server`
@@ -167,8 +174,9 @@ Example from my tech stack steering:
 ### How I Write Specs
 
 My specs have three parts:
+
 1. **Requirements** - What the feature needs to do (user stories + acceptance criteria)
-2. **Design** - How it works technically 
+2. **Design** - How it works technically
 3. **Tasks** - Step-by-step implementation plan
 
 Each task links back to a specific requirement, so I never lose track of why I'm building something.
@@ -202,6 +210,7 @@ These patterns could work for any project, not just games or Reddit apps.
 ### Team Development
 
 These patterns would work great for teams:
+
 - Shared steering rules so everyone has the same platform knowledge
 - Consistent automation across all team members
 - Specs that make collaboration way clearer
@@ -209,6 +218,7 @@ These patterns would work great for teams:
 ### Other Platforms
 
 The same approach works beyond Reddit:
+
 - Adapt steering rules for different platforms (mobile, web, desktop)
 - Create platform-specific asset management hooks
 - Build context libraries for whatever you're working on
@@ -224,6 +234,7 @@ The same approach works beyond Reddit:
 Building this game with Kiro was way different from normal development. Instead of just getting coding help, I created a whole system that understood my project and anticipated what I needed.
 
 Results:
+
 - Development got about 60% faster
 - Way fewer bugs and mistakes
 - Could focus on the fun stuff instead of boring maintenance
@@ -235,13 +246,14 @@ This feels like the future of development tools - moving from "help me fix this 
 
 ---
 
-*This shows what's possible when you go beyond basic AI assistance and create an intelligent development environment that actually understands your project and workflow.*
+_This shows what's possible when you go beyond basic AI assistance and create an intelligent development environment that actually understands your project and workflow._
+
 ## Complete Feature Coverage
 
 I wrote detailed specs for every major part of the game:
 
 1. **Leaf Collection Game Mechanics** - Core gameplay, physics, difficulty levels
-2. **Community Garden System** - Multiplayer collaboration and shared goals  
+2. **Community Garden System** - Multiplayer collaboration and shared goals
 3. **User Progression & Scoring** - Player advancement and achievements
 4. **Reddit Platform Integration** - Devvit-specific features and deployment
 5. **Kiro Developer Experience** - This documentation itself
@@ -268,18 +280,21 @@ I did something interesting here - I wrote specs for features that were already 
 This shows what's possible with advanced Kiro integration:
 
 **Innovation:**
+
 - Automation that anticipates needs
 - Platform-specific guidance
 - Progressive sophistication over time
 - Complete documentation coverage
 
 **Results:**
+
 - 5 comprehensive specs for all major features
 - 6 intelligent automation hooks
-- 8 context-aware steering rules  
+- 8 context-aware steering rules
 - 60% faster development overall
 
 **Value:**
+
 - Reusable patterns for other projects
 - Platform expertise embedded in tools
 - Scalable approach for any project size

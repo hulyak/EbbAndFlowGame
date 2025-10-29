@@ -1,5 +1,11 @@
 import express from 'express';
-import { InitResponse, StartGameResponse, CollectLeafResponse, LeaderboardResponse, GameDifficulty } from '../shared/types/api';
+import {
+  InitResponse,
+  StartGameResponse,
+  CollectLeafResponse,
+  LeaderboardResponse,
+  GameDifficulty,
+} from '../shared/types/api';
 import { reddit, createServer, context, getServerPort } from '@devvit/web/server';
 import { createPost } from './core/post';
 import { EbbFlowManager } from './core/ebbflow';
@@ -55,97 +61,105 @@ router.get<{ postId: string }, InitResponse | { status: string; message: string 
   }
 );
 
-router.post<{ postId: string }, StartGameResponse | { status: string; message: string }, { difficulty: string }>(
-  '/api/start-game',
-  async (req, res): Promise<void> => {
-    const { postId } = context;
-    if (!postId) {
-      res.status(400).json({
-        status: 'error',
-        message: 'postId is required',
-      });
-      return;
-    }
-
-    const { difficulty } = req.body;
-    if (!difficulty || !['easy', 'medium', 'hard'].includes(difficulty)) {
-      res.status(400).json({
-        status: 'error',
-        message: 'Valid difficulty is required (easy, medium, hard)',
-      });
-      return;
-    }
-
-    try {
-      const username = await reddit.getCurrentUsername();
-      const gameSession = await EbbFlowManager.startGame(username ?? 'anonymous', difficulty as GameDifficulty);
-
-      // Get remaining games
-      const { remaining } = await EbbFlowManager.canUserPlay(username ?? 'anonymous');
-
-      res.json({
-        type: 'start',
-        postId,
-        gameSession,
-        dailyGamesRemaining: remaining,
-      });
-    } catch (error) {
-      console.error(`Start game error for post ${postId}:`, error);
-      let errorMessage = 'Failed to start game';
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      res.status(400).json({ status: 'error', message: errorMessage });
-    }
+router.post<
+  { postId: string },
+  StartGameResponse | { status: string; message: string },
+  { difficulty: string }
+>('/api/start-game', async (req, res): Promise<void> => {
+  const { postId } = context;
+  if (!postId) {
+    res.status(400).json({
+      status: 'error',
+      message: 'postId is required',
+    });
+    return;
   }
-);
 
-router.post<{ postId: string }, CollectLeafResponse | { status: string; message: string }, { leafId: string }>(
-  '/api/collect-leaf',
-  async (req, res): Promise<void> => {
-    const { postId } = context;
-    if (!postId) {
-      res.status(400).json({
-        status: 'error',
-        message: 'postId is required',
-      });
-      return;
-    }
-
-    const { leafId } = req.body;
-    if (!leafId) {
-      res.status(400).json({
-        status: 'error',
-        message: 'leafId is required',
-      });
-      return;
-    }
-
-    try {
-      const username = await reddit.getCurrentUsername();
-      const { result, updatedSession, updatedUserStats } = await EbbFlowManager.collectLeaf(username ?? 'anonymous', leafId);
-
-      // Get remaining games
-      const { remaining } = await EbbFlowManager.canUserPlay(username ?? 'anonymous');
-
-      res.json({
-        type: 'collect',
-        postId,
-        result,
-        updatedSession,
-        updatedUserStats,
-        dailyGamesRemaining: remaining,
-      });
-    } catch (error) {
-      console.error(`Collect leaf error for post ${postId}:`, error);
-      let errorMessage = 'Failed to collect leaf';
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      res.status(400).json({ status: 'error', message: errorMessage });
-    }
+  const { difficulty } = req.body;
+  if (!difficulty || !['easy', 'medium', 'hard'].includes(difficulty)) {
+    res.status(400).json({
+      status: 'error',
+      message: 'Valid difficulty is required (easy, medium, hard)',
+    });
+    return;
   }
-);
+
+  try {
+    const username = await reddit.getCurrentUsername();
+    const gameSession = await EbbFlowManager.startGame(
+      username ?? 'anonymous',
+      difficulty as GameDifficulty
+    );
+
+    // Get remaining games
+    const { remaining } = await EbbFlowManager.canUserPlay(username ?? 'anonymous');
+
+    res.json({
+      type: 'start',
+      postId,
+      gameSession,
+      dailyGamesRemaining: remaining,
+    });
+  } catch (error) {
+    console.error(`Start game error for post ${postId}:`, error);
+    let errorMessage = 'Failed to start game';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    res.status(400).json({ status: 'error', message: errorMessage });
+  }
+});
+
+router.post<
+  { postId: string },
+  CollectLeafResponse | { status: string; message: string },
+  { leafId: string }
+>('/api/collect-leaf', async (req, res): Promise<void> => {
+  const { postId } = context;
+  if (!postId) {
+    res.status(400).json({
+      status: 'error',
+      message: 'postId is required',
+    });
+    return;
+  }
+
+  const { leafId } = req.body;
+  if (!leafId) {
+    res.status(400).json({
+      status: 'error',
+      message: 'leafId is required',
+    });
+    return;
+  }
+
+  try {
+    const username = await reddit.getCurrentUsername();
+    const { result, updatedSession, updatedUserStats } = await EbbFlowManager.collectLeaf(
+      username ?? 'anonymous',
+      leafId
+    );
+
+    // Get remaining games
+    const { remaining } = await EbbFlowManager.canUserPlay(username ?? 'anonymous');
+
+    res.json({
+      type: 'collect',
+      postId,
+      result,
+      updatedSession,
+      updatedUserStats,
+      dailyGamesRemaining: remaining,
+    });
+  } catch (error) {
+    console.error(`Collect leaf error for post ${postId}:`, error);
+    let errorMessage = 'Failed to collect leaf';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    res.status(400).json({ status: 'error', message: errorMessage });
+  }
+});
 
 router.get<{ postId: string }, LeaderboardResponse | { status: string; message: string }>(
   '/api/leaderboard',

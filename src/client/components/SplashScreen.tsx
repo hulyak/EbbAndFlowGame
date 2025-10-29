@@ -58,29 +58,39 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       {/* Main content */}
       <div className="text-center z-10 px-8">
         {/* Logo */}
-        <div className={`transition-all duration-1000 ${stage >= 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+        <div
+          className={`transition-all duration-1000 ${stage >= 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
+        >
           <div className="relative mb-8">
             <div className="text-8xl md:text-9xl animate-pulse-slow">🍃</div>
-            <div className="absolute inset-0 text-8xl md:text-9xl animate-spin-slow opacity-30">🌿</div>
+            <div className="absolute inset-0 text-8xl md:text-9xl animate-spin-slow opacity-30">
+              🌿
+            </div>
           </div>
         </div>
 
         {/* Title */}
-        <div className={`transition-all duration-1000 delay-300 ${stage >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div
+          className={`transition-all duration-1000 delay-300 ${stage >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        >
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-wide">
             Ebb & Flow
           </h1>
         </div>
 
         {/* Subtitle */}
-        <div className={`transition-all duration-1000 delay-500 ${stage >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div
+          className={`transition-all duration-1000 delay-500 ${stage >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        >
           <p className="text-xl md:text-2xl text-white/90 mb-8 font-light">
             Zen Leaf Collection Game
           </p>
         </div>
 
         {/* Floating leaves animation */}
-        <div className={`transition-all duration-1000 delay-700 ${stage >= 3 ? 'opacity-100' : 'opacity-0'}`}>
+        <div
+          className={`transition-all duration-1000 delay-700 ${stage >= 3 ? 'opacity-100' : 'opacity-0'}`}
+        >
           <div className="flex justify-center space-x-4 mb-8">
             {['🍁', '🍂', '🍃', '🌿', '🌸'].map((leaf, i) => (
               <div
@@ -98,7 +108,9 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         </div>
 
         {/* Loading indicator */}
-        <div className={`transition-all duration-1000 delay-1000 ${stage >= 4 ? 'opacity-100' : 'opacity-0'}`}>
+        <div
+          className={`transition-all duration-1000 delay-1000 ${stage >= 4 ? 'opacity-100' : 'opacity-0'}`}
+        >
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
           </div>
@@ -106,13 +118,9 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
         {/* Skip indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-          <p className="text-white/70 text-sm animate-pulse">
-            Click anywhere to skip
-          </p>
+          <p className="text-white/70 text-sm animate-pulse">Click anywhere to skip</p>
         </div>
       </div>
-
-
     </div>
   );
 };

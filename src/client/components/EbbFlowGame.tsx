@@ -15,7 +15,7 @@ const LEAF_EMOJIS = {
   oak: '🍂',
   birch: '🍃',
   willow: '🌿',
-  cherry: '🌸'
+  cherry: '🌸',
 };
 
 const LEAF_COLORS = {
@@ -23,27 +23,38 @@ const LEAF_COLORS = {
   yellow: '#eab308',
   orange: '#f97316',
   red: '#ef4444',
-  brown: '#a3a3a3'
+  brown: '#a3a3a3',
 };
 
-export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLeaderboard, gameLoading, communityGarden }: EbbFlowGameProps) => {
+export const EbbFlowGame = ({
+  gameSession,
+  onCollectLeaf,
+  onStartGame,
+  onShowLeaderboard,
+  gameLoading,
+  communityGarden,
+}: EbbFlowGameProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<GameDifficulty>('easy');
-  const [clickFeedbacks, setClickFeedbacks] = useState<Array<{
-    id: string;
-    x: number;
-    y: number;
-    isTarget: boolean;
-    timestamp: number;
-  }>>([]);
-  const [scorePopups, setScorePopups] = useState<Array<{
-    id: string;
-    x: number;
-    y: number;
-    points: number;
-    timestamp: number;
-  }>>([]);
+  const [clickFeedbacks, setClickFeedbacks] = useState<
+    Array<{
+      id: string;
+      x: number;
+      y: number;
+      isTarget: boolean;
+      timestamp: number;
+    }>
+  >([]);
+  const [scorePopups, setScorePopups] = useState<
+    Array<{
+      id: string;
+      x: number;
+      y: number;
+      points: number;
+      timestamp: number;
+    }>
+  >([]);
 
   // Show click feedback
   const showClickFeedback = useCallback((x: number, y: number, isTarget: boolean) => {
@@ -55,7 +66,7 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
       timestamp: Date.now(),
     };
 
-    setClickFeedbacks(prev => [...prev, feedback]);
+    setClickFeedbacks((prev) => [...prev, feedback]);
 
     // Add score popup
     const scorePopup = {
@@ -66,12 +77,12 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
       timestamp: Date.now(),
     };
 
-    setScorePopups(prev => [...prev, scorePopup]);
+    setScorePopups((prev) => [...prev, scorePopup]);
 
     // Remove feedback after animation (very fast cleanup)
     setTimeout(() => {
-      setClickFeedbacks(prev => prev.filter(f => f.id !== feedback.id));
-      setScorePopups(prev => prev.filter(s => s.id !== scorePopup.id));
+      setClickFeedbacks((prev) => prev.filter((f) => f.id !== feedback.id));
+      setScorePopups((prev) => prev.filter((s) => s.id !== scorePopup.id));
     }, 400); // Very fast cleanup for minimal interference
   }, []);
 
@@ -86,7 +97,7 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
     if (!ctx) return;
 
     // Update leaf physics with natural movement (modify in place for smooth animation)
-    gameSession.leaves.forEach(leaf => {
+    gameSession.leaves.forEach((leaf) => {
       // Skip collected leaves completely - don't modify them at all
       if (leaf.isCollected) return;
 
@@ -158,7 +169,7 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw leaves
-    gameSession.leaves.forEach(leaf => {
+    gameSession.leaves.forEach((leaf) => {
       if (leaf.isCollected) return;
 
       const x = (leaf.x / 100) * canvas.width;
@@ -238,7 +249,7 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
 
     // Draw click feedback animations (smaller and faster)
     const now = Date.now();
-    clickFeedbacks.forEach(feedback => {
+    clickFeedbacks.forEach((feedback) => {
       const age = now - feedback.timestamp;
       const progress = age / 600; // Faster 0.6 second animation
 
@@ -253,7 +264,9 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
         const radius = progress * 25; // Smaller radius
         const opacity = (1 - progress) * 0.6; // More transparent
 
-        ctx.strokeStyle = feedback.isTarget ? `rgba(251, 191, 36, ${opacity})` : `rgba(34, 197, 94, ${opacity})`;
+        ctx.strokeStyle = feedback.isTarget
+          ? `rgba(251, 191, 36, ${opacity})`
+          : `rgba(34, 197, 94, ${opacity})`;
         ctx.lineWidth = 2; // Thinner line
         ctx.beginPath();
         ctx.arc(0, 0, radius, 0, Math.PI * 2);
@@ -264,13 +277,14 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
     });
 
     // Draw very subtle score popups (minimal and transparent)
-    scorePopups.forEach(popup => {
+    scorePopups.forEach((popup) => {
       const age = now - popup.timestamp;
       const progress = age / 400; // Very fast 0.4 second animation
 
-      if (progress < 1 && popup.points > 50) { // Only show for target leaves
+      if (progress < 1 && popup.points > 50) {
+        // Only show for target leaves
         const x = (popup.x / 100) * canvas.width;
-        const y = (popup.y / 100) * canvas.height - (progress * 15); // Minimal upward movement
+        const y = (popup.y / 100) * canvas.height - progress * 15; // Minimal upward movement
 
         ctx.save();
         ctx.translate(x, y);
@@ -304,93 +318,104 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
   }, [gameSession?.status, animate]);
 
   // Handle canvas click/touch
-  const handleCanvasInteraction = useCallback((event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!gameSession || gameSession.status !== 'playing') return;
+  const handleCanvasInteraction = useCallback(
+    (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+      if (!gameSession || gameSession.status !== 'playing') return;
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+      const canvas = canvasRef.current;
+      if (!canvas) return;
 
-    const rect = canvas.getBoundingClientRect();
-    let clientX: number, clientY: number;
+      const rect = canvas.getBoundingClientRect();
+      let clientX: number, clientY: number;
 
-    if ('touches' in event) {
-      // Touch event
-      if (event.touches.length === 0) return;
-      const touch = event.touches[0];
-      if (!touch) return;
-      clientX = touch.clientX;
-      clientY = touch.clientY;
-    } else {
-      // Mouse event
-      clientX = event.clientX;
-      clientY = event.clientY;
-    }
-
-    const x = ((clientX - rect.left) / rect.width) * 100;
-    const y = ((clientY - rect.top) / rect.height) * 100;
-
-    // Check if click/touch is on a leaf
-    const clickedLeaf = gameSession.leaves.find(leaf => {
-      if (leaf.isCollected) return false;
-
-      const distance = Math.sqrt(
-        Math.pow(leaf.x - x, 2) + Math.pow(leaf.y - y, 2)
-      );
-      return distance < 8; // Adjusted hit area for smaller leaves
-    });
-
-    // Debug logging for click detection
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Click at (${x.toFixed(1)}, ${y.toFixed(1)})`);
-      if (clickedLeaf) {
-        console.log(`Hit leaf ${clickedLeaf.id} at (${clickedLeaf.x.toFixed(1)}, ${clickedLeaf.y.toFixed(1)}) - Target: ${clickedLeaf.isTarget}`);
+      if ('touches' in event) {
+        // Touch event
+        if (event.touches.length === 0) return;
+        const touch = event.touches[0];
+        if (!touch) return;
+        clientX = touch.clientX;
+        clientY = touch.clientY;
       } else {
-        console.log('No leaf hit');
-      }
-    }
-
-    if (clickedLeaf) {
-      // Immediately mark leaf as collected for instant feedback
-      clickedLeaf.isCollected = true;
-
-      // Add visual feedback at click position
-      showClickFeedback(x, y, clickedLeaf.isTarget);
-
-      // Add haptic feedback on mobile devices
-      if ('vibrate' in navigator) {
-        navigator.vibrate(clickedLeaf.isTarget ? [50, 30, 50] : [30]);
+        // Mouse event
+        clientX = event.clientX;
+        clientY = event.clientY;
       }
 
-      // Add audio feedback (simple beep using Web Audio API)
-      try {
-        const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-        const audioContext = new AudioContextClass();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+      const x = ((clientX - rect.left) / rect.width) * 100;
+      const y = ((clientY - rect.top) / rect.height) * 100;
 
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+      // Check if click/touch is on a leaf
+      const clickedLeaf = gameSession.leaves.find((leaf) => {
+        if (leaf.isCollected) return false;
 
-        oscillator.frequency.setValueAtTime(clickedLeaf.isTarget ? 800 : 400, audioContext.currentTime);
-        oscillator.type = 'sine';
+        const distance = Math.sqrt(Math.pow(leaf.x - x, 2) + Math.pow(leaf.y - y, 2));
+        return distance < 8; // Adjusted hit area for smaller leaves
+      });
 
-        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.2);
-      } catch (e) {
-        // Audio feedback failed, continue silently
+      // Debug logging for click detection (only in development)
+      if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+        console.log(`Click at (${x.toFixed(1)}, ${y.toFixed(1)})`);
+        if (clickedLeaf) {
+          console.log(
+            `Hit leaf ${clickedLeaf.id} at (${clickedLeaf.x.toFixed(1)}, ${clickedLeaf.y.toFixed(1)}) - Target: ${clickedLeaf.isTarget}`
+          );
+        } else {
+          console.log('No leaf hit');
+        }
       }
 
-      onCollectLeaf(clickedLeaf.id);
-    }
-  }, [gameSession, onCollectLeaf, showClickFeedback]);
+      if (clickedLeaf) {
+        // Immediately mark leaf as collected for instant feedback
+        clickedLeaf.isCollected = true;
+
+        // Add visual feedback at click position
+        showClickFeedback(x, y, clickedLeaf.isTarget);
+
+        // Add haptic feedback on mobile devices
+        if ('vibrate' in navigator) {
+          navigator.vibrate(clickedLeaf.isTarget ? [50, 30, 50] : [30]);
+        }
+
+        // Add audio feedback (simple beep using Web Audio API)
+        try {
+          const AudioContextClass =
+            window.AudioContext ||
+            (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+          const audioContext = new AudioContextClass();
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+
+          oscillator.frequency.setValueAtTime(
+            clickedLeaf.isTarget ? 800 : 400,
+            audioContext.currentTime
+          );
+          oscillator.type = 'sine';
+
+          gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.2);
+        } catch (e) {
+          // Audio feedback failed, continue silently
+        }
+
+        onCollectLeaf(clickedLeaf.id);
+      }
+    },
+    [gameSession, onCollectLeaf, showClickFeedback]
+  );
 
   // Game not started - show difficulty selection
   if (!gameSession) {
     return (
-      <div className="flex flex-col items-center justify-center bg-gradient-to-br from-emerald-100 via-teal-100 to-blue-100 p-2 sm:p-4 overflow-hidden" style={{ height: '100vh', width: '100vw' }}>
+      <div
+        className="flex flex-col items-center justify-center bg-gradient-to-br from-emerald-100 via-teal-100 to-blue-100 p-2 sm:p-4 overflow-hidden"
+        style={{ height: '100vh', width: '100vw' }}
+      >
         {/* Floating background leaves */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {Array.from({ length: 8 }).map((_, i) => (
@@ -420,24 +445,30 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
             Ebb & Flow
           </h1>
           <p className="text-gray-600 mb-4 sm:mb-6 text-xs sm:text-sm leading-relaxed">
-            Collect only the <span className="text-yellow-600 font-bold">GOLDEN GLOWING</span> leaves with sparkles ✨ - avoid gray ones!
+            Collect only the <span className="text-yellow-600 font-bold">GOLDEN GLOWING</span>{' '}
+            leaves with sparkles ✨ - avoid gray ones!
           </p>
 
           <div className="mb-4 sm:mb-6">
-            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-800">Choose Your Challenge</h3>
+            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-800">
+              Choose Your Challenge
+            </h3>
             <div className="space-y-2">
-              {(['easy', 'medium', 'hard'] as GameDifficulty[]).map(difficulty => (
+              {(['easy', 'medium', 'hard'] as GameDifficulty[]).map((difficulty) => (
                 <button
                   key={difficulty}
                   onClick={() => setSelectedDifficulty(difficulty)}
-                  className={`w-full p-2 sm:p-3 rounded-lg border-2 transition-all duration-200 ${selectedDifficulty === difficulty
-                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-md'
-                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-25'
-                    }`}
+                  className={`w-full p-2 sm:p-3 rounded-lg border-2 transition-all duration-200 ${
+                    selectedDifficulty === difficulty
+                      ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-md'
+                      : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-25'
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="text-left">
-                      <div className="font-semibold capitalize text-sm sm:text-base">{difficulty}</div>
+                      <div className="font-semibold capitalize text-sm sm:text-base">
+                        {difficulty}
+                      </div>
                       <div className="text-xs sm:text-sm text-gray-500">
                         {difficulty === 'easy' && '10 target • 25 total • 30s • 3 lives'}
                         {difficulty === 'medium' && '15 target • 35 total • 30s • 3 lives'}
@@ -483,17 +514,19 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
                 </h3>
                 <div className="flex justify-center space-x-3 text-xs">
                   <div className="text-center">
-                    <div className="font-bold text-emerald-600">{communityGarden.totalLeavesCollected.toLocaleString()}</div>
+                    <div className="font-bold text-emerald-600">
+                      {communityGarden.totalLeavesCollected.toLocaleString()}
+                    </div>
                     <div className="text-emerald-600">Total Leaves</div>
                   </div>
                   <div className="text-center">
-                    <div className="font-bold text-teal-600">{communityGarden.activeGoals.length}</div>
+                    <div className="font-bold text-teal-600">
+                      {communityGarden.activeGoals.length}
+                    </div>
                     <div className="text-teal-600">Active Goals</div>
                   </div>
                 </div>
-                <p className="text-xs text-emerald-600 mt-1">
-                  Contribute to community goals! 🌿
-                </p>
+                <p className="text-xs text-emerald-600 mt-1">Contribute to community goals! 🌿</p>
               </div>
             </div>
           )}
@@ -505,7 +538,10 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
   // Game in progress
   if (gameSession.status === 'playing') {
     return (
-      <div className="flex flex-col bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 overflow-hidden m-0 p-0" style={{ height: '100vh', width: '100vw' }}>
+      <div
+        className="flex flex-col bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 overflow-hidden m-0 p-0"
+        style={{ height: '100vh', width: '100vw' }}
+      >
         {/* Compact Game HUD */}
         <div className="bg-white/90 backdrop-blur-sm shadow-lg border-b border-white/20 flex-shrink-0">
           <div className="flex justify-between items-center mx-auto px-2 py-1">
@@ -521,8 +557,13 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
                 <div className="text-xs text-gray-500">Leaves</div>
               </div>
               <div className="text-center">
-                <div className={`text-base font-bold transition-colors ${gameSession.timeRemaining <= 10 ? 'text-red-500 animate-pulse' : 'text-orange-500'
-                  }`}>
+                <div
+                  className={`text-base font-bold transition-colors ${
+                    gameSession.timeRemaining <= 10
+                      ? 'text-red-500 animate-pulse'
+                      : 'text-orange-500'
+                  }`}
+                >
                   {gameSession.timeRemaining}s
                 </div>
                 <div className="text-xs text-gray-500">Time</div>
@@ -530,7 +571,9 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
             </div>
             <div className="flex items-center space-x-1">
               {Array.from({ length: gameSession.lives }).map((_, i) => (
-                <span key={i} className="text-red-500 text-sm animate-pulse">❤️</span>
+                <span key={i} className="text-red-500 text-sm animate-pulse">
+                  ❤️
+                </span>
               ))}
             </div>
           </div>
@@ -540,7 +583,9 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
             <div className="w-full bg-gray-200 rounded-full h-1">
               <div
                 className="bg-gradient-to-r from-emerald-400 to-teal-400 h-1 rounded-full transition-all duration-300"
-                style={{ width: `${(gameSession.collectedLeaves / gameSession.targetLeaves) * 100}%` }}
+                style={{
+                  width: `${(gameSession.collectedLeaves / gameSession.targetLeaves) * 100}%`,
+                }}
               />
             </div>
           </div>
@@ -557,14 +602,15 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
               onTouchStart={gameSession.status === 'playing' ? handleCanvasInteraction : undefined}
               onTouchEnd={(e) => e.preventDefault()}
               onTouchMove={(e) => e.preventDefault()}
-              className={`border-2 border-white/30 rounded-lg shadow-2xl touch-none bg-gradient-to-br from-sky-100 to-emerald-100 ${gameSession.status === 'playing' ? 'cursor-pointer' : 'cursor-default'
-                }`}
+              className={`border-2 border-white/30 rounded-lg shadow-2xl touch-none bg-gradient-to-br from-sky-100 to-emerald-100 ${
+                gameSession.status === 'playing' ? 'cursor-pointer' : 'cursor-default'
+              }`}
               style={{
                 width: '100%',
                 height: '100%',
                 maxWidth: '100%',
                 maxHeight: '100%',
-                aspectRatio: '4/3'
+                aspectRatio: '4/3',
               }}
             />
 
@@ -578,9 +624,7 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
                   <div className="text-base font-bold text-gray-800">
                     {gameSession.status === 'completed' ? 'Complete!' : 'Game Over!'}
                   </div>
-                  <div className="text-xs text-gray-600">
-                    Score: {gameSession.score}
-                  </div>
+                  <div className="text-xs text-gray-600">Score: {gameSession.score}</div>
                 </div>
               </div>
             )}
@@ -591,7 +635,9 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
         <div className="bg-white/90 backdrop-blur-sm border-t border-white/20 py-1 px-2 flex-shrink-0">
           <div className="mx-auto text-center">
             <div className="flex justify-center space-x-4 text-xs text-gray-600">
-              <span>🎯 Collect <span className="text-yellow-600 font-semibold">GOLDEN</span> leaves ✨</span>
+              <span>
+                🎯 Collect <span className="text-yellow-600 font-semibold">GOLDEN</span> leaves ✨
+              </span>
               <span>✨ = 100pts</span>
               <span>💔 = -1 life</span>
             </div>
@@ -603,7 +649,10 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
 
   // Game completed or failed
   return (
-    <div className="flex items-center justify-center bg-gradient-to-br from-emerald-100 via-teal-100 to-blue-100 p-2 sm:p-4 overflow-hidden" style={{ height: '100vh', width: '100vw' }}>
+    <div
+      className="flex items-center justify-center bg-gradient-to-br from-emerald-100 via-teal-100 to-blue-100 p-2 sm:p-4 overflow-hidden"
+      style={{ height: '100vh', width: '100vw' }}
+    >
       {/* Celebration particles */}
       {gameSession.status === 'completed' && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -627,7 +676,9 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
       <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-3 sm:p-6 shadow-2xl max-w-sm sm:max-w-md w-full text-center relative z-10 border border-white/20 max-h-[95vh] overflow-y-auto">
         {/* Result icon with animation */}
         <div className="relative mb-3 sm:mb-4">
-          <div className={`text-4xl sm:text-6xl mb-2 ${gameSession.status === 'completed' ? 'animate-bounce' : 'animate-pulse'}`}>
+          <div
+            className={`text-4xl sm:text-6xl mb-2 ${gameSession.status === 'completed' ? 'animate-bounce' : 'animate-pulse'}`}
+          >
             {gameSession.status === 'completed' ? '🎉' : '😔'}
           </div>
           {gameSession.status === 'completed' && (
@@ -635,17 +686,22 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
           )}
         </div>
 
-        <h2 className={`text-xl sm:text-2xl font-bold mb-3 sm:mb-4 ${gameSession.status === 'completed'
-          ? 'bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent'
-          : 'text-red-600'
-          }`}>
+        <h2
+          className={`text-xl sm:text-2xl font-bold mb-3 sm:mb-4 ${
+            gameSession.status === 'completed'
+              ? 'bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent'
+              : 'text-red-600'
+          }`}
+        >
           {gameSession.status === 'completed' ? 'Fantastic!' : 'Game Over!'}
         </h2>
 
         {/* Stats with better visual hierarchy */}
         <div className="space-y-3 mb-4 sm:mb-6">
           <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-3">
-            <div className="text-2xl sm:text-3xl font-bold text-emerald-600 mb-1">{gameSession.score}</div>
+            <div className="text-2xl sm:text-3xl font-bold text-emerald-600 mb-1">
+              {gameSession.score}
+            </div>
             <div className="text-xs sm:text-sm text-gray-600">Final Score</div>
           </div>
 
@@ -657,7 +713,9 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
               <div className="text-xs text-gray-600">Leaves Collected</div>
             </div>
             <div className="bg-blue-50 rounded-lg p-2">
-              <div className="text-lg sm:text-xl font-bold text-blue-600">Level {gameSession.level}</div>
+              <div className="text-lg sm:text-xl font-bold text-blue-600">
+                Level {gameSession.level}
+              </div>
               <div className="text-xs text-gray-600 capitalize">{gameSession.difficulty}</div>
             </div>
           </div>
@@ -665,25 +723,27 @@ export const EbbFlowGame = ({ gameSession, onCollectLeaf, onStartGame, onShowLea
           {/* Game completion message */}
           <div className="text-xs sm:text-sm text-gray-600 italic">
             {gameSession.status === 'completed'
-              ? "Great job! Ready for another challenge? 🌿"
-              : "Don't give up! Try again to improve your score! 💪"
-            }
+              ? 'Great job! Ready for another challenge? 🌿'
+              : "Don't give up! Try again to improve your score! 💪"}
           </div>
         </div>
 
         <div className="space-y-3">
           {/* Difficulty Selection */}
           <div>
-            <h3 className="text-base sm:text-lg font-semibold mb-2 text-gray-800 text-center">Choose Your Next Challenge</h3>
+            <h3 className="text-base sm:text-lg font-semibold mb-2 text-gray-800 text-center">
+              Choose Your Next Challenge
+            </h3>
             <div className="space-y-1.5">
-              {(['easy', 'medium', 'hard'] as GameDifficulty[]).map(difficulty => (
+              {(['easy', 'medium', 'hard'] as GameDifficulty[]).map((difficulty) => (
                 <button
                   key={difficulty}
                   onClick={() => onStartGame(difficulty)}
-                  className={`w-full p-2 rounded-lg border-2 transition-all duration-200 ${difficulty === gameSession.difficulty
-                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-md'
-                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-25'
-                    }`}
+                  className={`w-full p-2 rounded-lg border-2 transition-all duration-200 ${
+                    difficulty === gameSession.difficulty
+                      ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-md'
+                      : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-25'
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="text-left">
